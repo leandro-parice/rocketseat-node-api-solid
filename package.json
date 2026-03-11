@@ -6,17 +6,28 @@
 	"scripts": {
 		"start:dev": "tsx watch src/server.ts",
 		"start": "node build/server.js",
-		"build": "tsup src --out-dir build --format esm"
+		"build": "tsup src --out-dir build --format esm",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier . --write",
+		"format:check": "prettier . --check"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"type": "module",
 	"devDependencies": {
+		"@eslint/js": "10.0.1",
 		"@types/node": "25.4.0",
+		"eslint": "10.0.3",
+		"eslint-config-prettier": "10.1.8",
+		"globals": "17.4.0",
+		"jiti": "2.6.1",
+		"prettier": "3.8.1",
 		"tsup": "8.5.1",
 		"tsx": "4.21.0",
-		"typescript": "5.9.3"
+		"typescript": "5.9.3",
+		"typescript-eslint": "8.57.0"
 	},
 	"dependencies": {
 		"dotenv": "17.3.1",
