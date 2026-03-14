@@ -10,7 +10,9 @@
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"format": "prettier . --write",
-		"format:check": "prettier . --check"
+		"format:check": "prettier . --check",
+		"test": "vitest run",
+		"test:watch": "vitest watch"
 	},
 	"keywords": [],
 	"author": "",
@@ -29,7 +31,8 @@
 		"tsup": "8.5.1",
 		"tsx": "4.21.0",
 		"typescript": "5.9.3",
-		"typescript-eslint": "8.57.0"
+		"typescript-eslint": "8.57.0",
+		"vitest": "4.1.0"
 	},
 	"dependencies": {
 		"@prisma/adapter-pg": "7.5.0",
