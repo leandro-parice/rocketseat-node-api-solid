@@ -13,7 +13,8 @@
 		"format:check": "prettier . --check",
 		"test": "vitest run",
 		"test:watch": "vitest watch",
-		"test:coverage": "vitest run --coverage"
+		"test:coverage": "vitest run --coverage",
+		"test:ui": "vitest --ui"
 	},
 	"keywords": [],
 	"author": "",
@@ -24,6 +25,7 @@
 		"@types/node": "25.4.0",
 		"@types/pg": "8.18.0",
 		"@vitest/coverage-v8": "4.1.0",
+		"@vitest/ui": "4.1.0",
 		"eslint": "10.0.3",
 		"eslint-config-prettier": "10.1.8",
 		"globals": "17.4.0",
