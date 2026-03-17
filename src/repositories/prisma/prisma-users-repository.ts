@@ -16,6 +16,16 @@ export class PrismaUsersRepository implements UsersRepository {
 		return user ? this.mapToDomain(user) : null;
 	}
 
+	async findById(id: string) {
+		const user = await prisma.user.findUnique({
+			where: {
+				id,
+			},
+		});
+
+		return user ? this.mapToDomain(user) : null;
+	}
+
 	async create(data: UserCreateData) {
 		const user = await prisma.user.create({
 			data,
