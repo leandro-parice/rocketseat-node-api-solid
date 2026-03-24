@@ -3,27 +3,19 @@ import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-c
 
 import { CheckInUseCase } from './check-in.js';
 import { InMemoryGymsRepository } from '@/repositories/in-memory/in-memory-gyms-repository.js';
-import { Decimal } from '@prisma/client/runtime/index-browser';
+import type { User } from 'generated/prisma/browser.js';
+import { MaxDistanceError } from './errors/max-distance-error.js';
+import { MaxNumberOfCheckInsError } from './errors/max-number-of-check-ins-error.js';
 
 let checkInRepository: InMemoryCheckInsRepository;
 let gymsRepository: InMemoryGymsRepository;
 let checkInUseCase: CheckInUseCase;
 
 describe('Check In Use Case', () => {
-	beforeEach(() => {
+	beforeEach(async () => {
 		checkInRepository = new InMemoryCheckInsRepository();
 		gymsRepository = new InMemoryGymsRepository();
 		checkInUseCase = new CheckInUseCase(checkInRepository, gymsRepository);
-
-		gymsRepository.items.push({
-			id: 'gym-1',
-			name: 'Gym 1',
-			description: null,
-			latitude: new Decimal(-22.2786705),
-			longitude: new Decimal(-48.5487406),
-			phone: null,
-			created_at: new Date(),
-		});
 
 		vi.useFakeTimers();
 	});
@@ -33,14 +25,19 @@ describe('Check In Use Case', () => {
 	});
 
 	it('should be able to check in', async () => {
+		const gym = await gymsRepository.create({
+			name: 'Gym 1',
+			latitude: -22.2786705,
+			longitude: -48.5487406,
+		});
+
 		const userId = 'user-1';
-		const gymId = 'gym-1';
 
 		const { checkIn } = await checkInUseCase.execute({
 			userId,
-			gymId,
-			userLatitude: new Decimal(-22.2786705),
-			userLongitude: new Decimal(-48.5487406),
+			gymId: gym.id,
+			userLatitude: -22.2786705,
+			userLongitude: -48.5487406,
 		});
 
 		expect(checkIn.id).toEqual(expect.any(String));
@@ -50,45 +47,59 @@ describe('Check In Use Case', () => {
 		vi.setSystemTime(new Date(2026, 0, 20, 8, 0, 0));
 
 		const userId = 'user-1';
-		const gymId = 'gym-1';
+		const gym1 = await gymsRepository.create({
+			name: 'Gym 1',
+			latitude: -22.2786705,
+			longitude: -48.5487406,
+		});
+
+		const gym2 = await gymsRepository.create({
+			name: 'Gym 2',
+			latitude: -23.2786705,
+			longitude: -48.5487406,
+		});
 
 		await checkInUseCase.execute({
 			userId,
-			gymId,
-			userLatitude: new Decimal(-22.2786705),
-			userLongitude: new Decimal(-48.5487406),
+			gymId: gym1.id,
+			userLatitude: -22.2786705,
+			userLongitude: -48.5487406,
 		});
 
 		await expect(() =>
 			checkInUseCase.execute({
 				userId,
-				gymId,
-				userLatitude: new Decimal(-22.2786705),
-				userLongitude: new Decimal(-48.5487406),
+				gymId: gym2.id,
+				userLatitude: -22.2786705,
+				userLongitude: -48.5487406,
 			}),
-		).rejects.toBeInstanceOf(Error);
+		).rejects.toBeInstanceOf(MaxNumberOfCheckInsError);
 	});
 
 	it('should be able to check in twice but in different days', async () => {
 		const userId = 'user-1';
-		const gymId = 'gym-1';
+		const gym = await gymsRepository.create({
+			name: 'Gym 1',
+			latitude: -22.2786705,
+			longitude: -48.5487406,
+		});
 
 		vi.setSystemTime(new Date(2026, 0, 20, 8, 0, 0));
 
 		await checkInUseCase.execute({
 			userId,
-			gymId,
-			userLatitude: new Decimal(-22.2786705),
-			userLongitude: new Decimal(-48.5487406),
+			gymId: gym.id,
+			userLatitude: -22.2786705,
+			userLongitude: -48.5487406,
 		});
 
 		vi.setSystemTime(new Date(2026, 0, 21, 8, 0, 0));
 
 		const { checkIn } = await checkInUseCase.execute({
 			userId,
-			gymId,
-			userLatitude: new Decimal(-22.2786705),
-			userLongitude: new Decimal(-48.5487406),
+			gymId: gym.id,
+			userLatitude: -22.2786705,
+			userLongitude: -48.5487406,
 		});
 
 		expect(checkIn.id).toEqual(expect.any(String));
@@ -99,8 +110,8 @@ describe('Check In Use Case', () => {
 			id: 'gym-2',
 			name: 'Gym 2',
 			description: null,
-			latitude: new Decimal(-22.2355427),
-			longitude: new Decimal(-48.4494478),
+			latitude: -22.2355427,
+			longitude: -48.4494478,
 			phone: null,
 			created_at: new Date(),
 		});
@@ -109,9 +120,9 @@ describe('Check In Use Case', () => {
 			checkInUseCase.execute({
 				userId: 'user-1',
 				gymId: 'gym-2',
-				userLatitude: new Decimal(-22.2786705),
-				userLongitude: new Decimal(-48.5487406),
+				userLatitude: -22.2786705,
+				userLongitude: -48.5487406,
 			}),
-		).rejects.toBeInstanceOf(Error);
+		).rejects.toBeInstanceOf(MaxDistanceError);
 	});
 });

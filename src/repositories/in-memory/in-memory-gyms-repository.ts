@@ -1,4 +1,5 @@
-import type { Gym, GymsRepository } from '../gyms-repository.js';
+import { randomUUID } from 'node:crypto';
+import type { Gym, GymCreateData, GymsRepository } from '../gyms-repository.js';
 
 export class InMemoryGymsRepository implements GymsRepository {
 	public items: Gym[] = [];
@@ -8,6 +9,22 @@ export class InMemoryGymsRepository implements GymsRepository {
 		if (!gym) {
 			return null;
 		}
+		return gym;
+	}
+
+	async create(data: GymCreateData) {
+		const gym = {
+			id: randomUUID(),
+			name: data.name,
+			description: data.description ?? null,
+			phone: data.phone ?? null,
+			latitude: data.latitude,
+			longitude: data.longitude,
+			created_at: new Date(),
+		};
+
+		this.items.push(gym);
+
 		return gym;
 	}
 }
