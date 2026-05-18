@@ -27,4 +27,11 @@ export class InMemoryGymsRepository implements GymsRepository {
 
 		return gym;
 	}
+
+	async searchMany(query: string, page: number) {
+		const perPage = 20;
+		return this.items
+			.filter((gym) => gym.name.toLowerCase().includes(query.toLowerCase()))
+			.slice((page - 1) * perPage, page * perPage);
+	}
 }

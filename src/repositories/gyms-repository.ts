@@ -19,4 +19,5 @@ export interface GymCreateData {
 export interface GymsRepository {
 	findById(id: string): Promise<Gym | null>;
 	create(data: GymCreateData): Promise<Gym>;
+	searchMany(query: string, page: number): Promise<Gym[]>;
 }
