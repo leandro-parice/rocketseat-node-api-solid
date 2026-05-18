@@ -1,9 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository.js';
-
 import { CheckInUseCase } from './check-in.js';
 import { InMemoryGymsRepository } from '@/repositories/in-memory/in-memory-gyms-repository.js';
-import type { User } from 'generated/prisma/browser.js';
 import { MaxDistanceError } from './errors/max-distance-error.js';
 import { MaxNumberOfCheckInsError } from './errors/max-number-of-check-ins-error.js';
 
