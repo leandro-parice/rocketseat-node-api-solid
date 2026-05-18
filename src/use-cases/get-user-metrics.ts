@@ -1,7 +1,4 @@
-import type {
-	CheckIn,
-	CheckInsRepository,
-} from '@/repositories/check-ins-repository.js';
+import type { CheckInsRepository } from '@/repositories/check-ins-repository.js';
 
 interface GetUserMetricsRequest {
 	userId: string;
