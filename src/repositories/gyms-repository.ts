@@ -16,8 +16,14 @@ export interface GymCreateData {
 	longitude: number;
 }
 
+export interface FindManyNearbyParams {
+	latitude: number;
+	longitude: number;
+}
+
 export interface GymsRepository {
 	findById(id: string): Promise<Gym | null>;
 	create(data: GymCreateData): Promise<Gym>;
 	searchMany(query: string, page: number): Promise<Gym[]>;
+	findManyNearby(params: FindManyNearbyParams): Promise<Gym[]>;
 }
