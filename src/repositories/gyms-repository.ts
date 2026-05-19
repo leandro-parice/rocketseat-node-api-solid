@@ -10,8 +10,8 @@ export interface Gym {
 
 export interface GymCreateData {
 	name: string;
-	description?: string | null | undefined;
-	phone?: string | null | undefined;
+	description?: string | null;
+	phone?: string | null;
 	latitude: number;
 	longitude: number;
 }
