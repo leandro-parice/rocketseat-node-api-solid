@@ -17,4 +17,6 @@ export interface CheckInsRepository {
 	findManyByUserId(userId: string, page: number): Promise<CheckIn[]>;
 	countByUserId(userId: string): Promise<number>;
 	create(data: CheckInCreateData): Promise<CheckIn>;
+	findById(id: string): Promise<CheckIn | null>;
+	save(checkIn: CheckIn): Promise<void>;
 }
